@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ujian Harian</title>
+    <style>
+        body {
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            background-color: white;
+            border-radius: 5px;
+            padding: 3em;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: left;
+            color: Black;
+        }
+
+        .container input, .container select {
+            width: calc(100% - 1em);
+            border-radius: 5px;
+            padding: 0.5em;
+            color: black;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1em;
+        }
+
+        .Login, .Daftar, .Refresh, .backhome {
+            width: calc(100% - 1em);
+            border-radius: 5px;
+            padding: 0.5em;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1em;
+            cursor: pointer;
+        }
+
+        .Login {
+            background-color: #3a547a;
+            color: white;
+        }
+
+        .Daftar {
+            background-color: red;
+            color: white;
+        }
+
+        .Refresh {
+            background-color: #FFD000;
+            color: white;
+        }
+
+        .backhome {
+            background-color: lightgreen;
+            color: white;
+        }
+
+        .Login:hover, .Daftar:hover, .Refresh:hover, .backhome:hover {
+            opacity: 0.8;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: -300px;
+            background-color: #ffffff;
+            border: 1px solid #ccc;
+            padding: 15px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            z-index: 1000;
+            transition: right 0.5s ease-in-out, opacity 0.5s ease-in-out;
+            opacity: 0;
+        }
+
+        .notification.success {
+            border-color: lightgreen;
+        }
+
+        .notification.error {
+            border-color: red;
+        }
+
+        .notification.success .progress-bar {
+            background-color: green;
+        }
+
+        .notification.error .progress-bar {
+            background-color: red;
+        }
+
+        .notification.show {
+            right: 20px;
+            opacity: 1;
+        }
+
+        .notification.hide {
+            right: -300px;
+            opacity: 0;
+        }
+
+        .progress-bar {
+            height: 4px;
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            animation: shrink 3s linear forwards;
+        }
+
+        @keyframes shrink {
+            from {
+                width: 100%;
+            }
+            to {
+                width: 0%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Selamat Datang</h1>
+        <h5>Silahkan login menggunakan username dan password yang anda miliki. Jika anda tidak memiliki username silahkan daftar</h5>
+        <h4>SELAMAT DATANG DI CBT SMPN 12 BALIKPAPAN</h4>
+        <input type="text" placeholder="Username" id="username" required>
+        <input type="password" placeholder="Password" id="password" required>
+        <select id="navigate" class="navigate">
+            <option value="">Pilih Kelas Masing - Masing</option>
+            <option value="Ujian7.html">7</option>
+            <option value="Ujian8.html">8</option>
+            <option value="Ujian9.html">9</option>
+        </select>
+        <button class="Login" onclick="login()">Login</button>
+        <button class="Daftar" onclick="register()">Daftar</button>
+        <button class="Refresh" onclick="location.reload()">Refresh</button>
+        <button class="backhome" onclick="window.location.href='Ujianharian.html'">Back</button>
+    </div>
+    <div id="notification" class="notification">
+        <span id="notification-message">Pesan</span>
+        <div id="progress-bar" class="progress-bar"></div>
+    </div>
+    <script>
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const selectedUrl = document.getElementById('navigate').value;
+
+            const storedUsers = JSON.parse(localStorage.getItem('users')) || {};
+            if (storedUsers[username] && storedUsers[username].password === password) {
+                if (selectedUrl) {
+                    showNotification('Berhasil Masuk. Mari masuk Ke CBT', selectedUrl, 'success');
+                } else {
+                    showNotification('Tidak Dapat Masuk Ke CBT. Karena  Kamu Tidak Memilih Kelas.', null, 'error');
+                }
+            } else {
+                showNotification('Username atau password salah. Tidak dapat masuk.', null, 'error');
+            }
+        }
+
+        function register() {
+            const username = prompt('Masukkan username:');
+            const password = prompt('Masukkan password:');
+            
+            if (username && password) {
+                const storedUsers = JSON.parse(localStorage.getItem('users')) || {};
+                
+                if (storedUsers[username]) {
+                    showNotification('Pengguna sudah ada.', null, 'error');
+                } else {
+                    storedUsers[username] = { password };
+                    localStorage.setItem('users', JSON.stringify(storedUsers));
+                    showNotification('Pendaftaran berhasil!', null, 'success');
+                }
+            } else {
+                showNotification('Username dan password diperlukan.', null, 'error');
+            }
+        }
+
+        function showNotification(message, redirectUrl, type) {
+            const notification = document.getElementById('notification');
+            const notificationMessage = document.getElementById('notification-message');
+            const progressBar = document.getElementById('progress-bar');
+            
+            notificationMessage.textContent = message;
+            notification.classList.remove('success', 'error');
+            notification.classList.add(type);
+            notification.classList.add('show');
+
+            progressBar.style.animation = 'none'; // Reset animation
+            progressBar.offsetHeight; // Trigger reflow to restart animation
+            progressBar.style.animation = ''; // Reapply animation
+
+            setTimeout(() => {
+                notification.classList.add('hide');
+                setTimeout(() => {
+                    notification.classList.remove('show', 'hide');
+                    if (redirectUrl) {
+                        window.location.href = redirectUrl;
+                    }
+                }, 500); // Ensure animation finishes before removing classes
+            }, 3000); // Duration notification is visible (3000ms = 3 seconds)
+        }
+    </script>
+</body>
+</html>

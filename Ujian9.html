@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pemilihan Mata Pelajaran Ulangan</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        select, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Pemilihan Mata Pelajaran Ulangan</h2>
+        <form id="subjectForm">
+            <div class="form-group">
+                <label for="subject">Pilih Mata Pelajaran:</label>
+                <select id="subject" name="subject">
+                    <option value="Pilih_Mapel">Pilih Mapel</option>
+                    <option value="matematika">Matematika</option>
+                    <option value="fisika">Fisika</option>
+                    <option value="kimia">Kimia</option>
+                    <option value="biologi">Biologi</option>
+                    <option value="bahasa_inggris">Bahasa Inggris</option>
+                </select>
+            </div>
+            <button type="button" onclick="submitForm()">Submit</button>
+            <button type="button" onclick="window.location.href='loginordaftar.html'">Back</button>
+        </form>
+        <div id="result" style="margin-top: 20px;"></div>
+    </div>
+
+    <script>
+        function submitForm() {
+            const subject = document.getElementById('subject').value;
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `<p>Anda telah memilih mata pelajaran: <strong>${subject}</strong> Wait sedang menyiapkan Halaman</p>`;
+            
+            // Redirect to different URLs based on the selected subject
+            let url;
+            switch (subject) {
+                case 'matematika':
+                    url = 'https://example.com/matematika';
+                    break;
+                case 'Pilih_Mapel':
+                    url = 'JIKATIDAKMEMILIHMAPELUJIAN9.HTML';
+                    break;    
+                case 'fisika':
+                    url = 'https://example.com/fisika';
+                    break;
+                case 'kimia':
+                    url = 'https://example.com/kimia';
+                    break;
+                case 'biologi':
+                    url = 'https://example.com/biologi';
+                    break;
+                case 'bahasa_inggris':
+                    url = 'https://example.com/bahasa_inggris';
+                    break;
+                default:
+                    url = 'https://example.com';
+            }
+            
+            // Redirect to the chosen URL after 2 seconds
+            setTimeout(() => {
+                window.location.href = url;
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
